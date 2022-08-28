@@ -82,6 +82,10 @@ module.exports = {
     admin_cors: ADMIN_CORS,
     jwt_secret: JWT_SECRET,
     cookie_secret: COOKIE_SECRET,
+    database_extra:
+      process.env.NODE_ENV !== "development"
+        ? { ssl: { rejectUnauthorized: false } }
+        : {},
   },
   plugins,
 };
