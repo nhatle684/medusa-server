@@ -1,5 +1,3 @@
-const dotenv = require('dotenv')
-
 let ENV_FILE_NAME = '';
 switch (process.env.NODE_ENV) {
 	case 'production':
@@ -18,6 +16,7 @@ switch (process.env.NODE_ENV) {
 }
 
 try {
+  const dotenv = require('dotenv')
 	dotenv.config({ path: process.cwd() + '/' + ENV_FILE_NAME });
 } catch (e) {
 }
