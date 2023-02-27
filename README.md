@@ -1,13 +1,13 @@
 <p align="center">
   <a href="https://www.medusa-commerce.com">
-    <img alt="Medusa" src="https://user-images.githubusercontent.com/7554214/129161578-19b83dc8-fac5-4520-bd48-53cba676edd2.png" width="100" />
+    <img alt="Medusa" src="https://i.imgur.com/USubGVY.png" width="100" />
   </a>
 </p>
 <h1 align="center">
-  Medusa Starter Contentful
+  Medusa Starter Default
 </h1>
 <p align="center">
-This repo provides the skeleton to get you started with using <a href="https://github.com/medusajs/medusa">Medusa</a> and Contentful. Follow the steps below to get ready.
+This repo provides the skeleton to get you started with using <a href="https://github.com/medusajs/medusa">Medusa</a>. Follow the steps below to get ready.
 </p>
 <p align="center">
   <a href="https://github.com/medusajs/medusa/blob/master/LICENSE">
@@ -22,17 +22,23 @@ This repo provides the skeleton to get you started with using <a href="https://g
   <a href="https://twitter.com/intent/follow?screen_name=medusajs">
     <img src="https://img.shields.io/twitter/follow/medusajs.svg?label=Follow%20@medusajs" alt="Follow @medusajs" />
   </a>
+  <p align="center">
+    <a href="https://heroku.com/deploy?template=https://github.com/medusajs/medusa-starter-default/tree/feat/deploy-heroku">
+      <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
+    </a>
+  </p>
 </p>
 
 ## Prerequisites
-This starter has prerequisites and most of these will usually already be installed on your computer. Please not the Contentful plugin requires Redis.
+
+This starter has minimal prerequisites and most of these will usually already be installed on your computer.
 
 - [Install Node.js](https://nodejs.org/en/download/)
 - [Install git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 - [Install SQLite](https://www.sqlite.org/download.html)
-- [Install Redis](https://redis.io/download)
 
 ## Setting up your store
+
 - Install the Medusa CLI
   ```
   npm install -g @medusajs/medusa
@@ -40,58 +46,80 @@ This starter has prerequisites and most of these will usually already be install
   ```
 - Create a new Medusa project
   ```
-  medusa new medusa-contentful https://github.com/medusajs/medusa-starter-contentful
-  cd medusa-contentful
+  medusa new my-medusa-store
   ```
-
-## Setting up Contentful
-- [Create a Contentful account](https://www.contentful.com/sign-up)
-- Create a Contentful Space
-- Get your Contentful Access Token (Settings > API Keys > Content Management Tokens > Generate Personal Token)
-- Update your environment variables in `.env`
+- Run your project
   ```
-  CONTENTFUL_SPACE_ID=[your space id]
-  CONTENTFUL_ACCESS_TOKEN=[your personal access token]
-  ```
-- Set up webhook (optional)
-- Migrate & seed Contentful space
-  ```
-  yarn migrate:contentful
-  yarn seed:contentful
-  ```
-
-## Run your project
-  ```
-  yarn seed
+  cd my-medusa-store
   medusa develop
   ```
 
-Your local Medusa server is now running on port **9000**. 
+Your local Medusa server is now running on port **9000**.
 
-Everytime you create or update Products, Product Variants or Regions Contentful and Medusa data will be synced.
+### Seeding your Medusa store
 
-## What's inside
-This starter uses `medusa-plugin-contentful` to synchronize data between your Medusa store and your Contentful space.
+---
 
-In the `/contentful-migrations` directory you will find migration files to setup content types in Contentful.
-The content types can be used to build pages for your webiste and include:
+To seed your medusa store run the following command:
 
-- **Page**: Represents a page on your website. Each page has a title and can take any number of "Content Modules". Content Modules can be either of the type Hero or Tile Section.
-- **Hero**: a component that can take a Title, CTA and a background image.
-- **Tile**: a component that can be added to a Tile Section and renders a Title, CTA and an Image.
-- **Tile Section**: a component that can hold a number of Tiles or Products. When used with a Product, the Tile Section will display the product thumbnail and it's title and will link to the product page.
-- **Link**: a component that can link to an external or internal path; or, alternatively, hold a reference to a Page or Product entry. If used with Page or Product, the link path will be infered from the referenced entry.
-- **Navigation Item**: an item to include in a Navigation Menu. Each navigation item has a title that can be displayed in a menu and a link that defines where the user will be navigated to when the item is clicked.
-- **Product**: represents a product as syncronized from Medusa. A product's variants will be copied over as well.
-- **Product Variant**: The variants of a product.
-- **Region**: Represents an available region in Medusa.
+```
+medusa seed -f ./data/seed.json
+```
 
-The the `seed:contentful` script will will use this content modules to add some test data for you to get started with. The test data includes:
-- A home page with a hero, some featured products and the tools used.
-- An about page with a hero that links to the Medusa website.
-- A product overview page that can be configured to show products in the store.
+This command seeds your database with some sample data to get you started, including a store, an administrator account, a region and a product with variants. What the data looks like precisely you can see in the `./data/seed.json` file.
 
-> Note: After seeding your database and starting your server you will have to publish the copied products in Contentful and add them to "Featured Products" Tile Section.
+## Setting up your store with Docker
+
+- Install the Medusa CLI
+  ```
+  npm install -g @medusajs/medusa-cli
+  ```
+- Create a new Medusa project
+  ```
+  medusa new my-medusa-store
+  ```
+- Update project config in `medusa-config.js`:
+
+  ```
+  module.exports = {
+    projectConfig: {
+      redis_url: REDIS_URL,
+      database_url: DATABASE_URL, //postgres connectionstring
+      database_type: "postgres",
+      store_cors: STORE_CORS,
+      admin_cors: ADMIN_CORS,
+    },
+    plugins,
+  };
+  ```
+
+- Run your project
+
+  When running your project the first time `docker compose` should be run with the `build` flag to build your container locally:
+
+  ```
+  docker-compose up --build
+  ```
+
+  When running your project subsequent times you can run docker compose with no flags to spin up your local environment in seconds:
+
+  ```
+  docker-compose up
+  ```
+
+Your local Medusa server is now running on port **9000**.
+
+### Seeding your Medusa store with Docker
+
+---
+
+To add seed data to your medusa store running with Docker, run this command in a seperate terminal:
+
+```
+docker exec medusa-server medusa seed -f ./data/seed.json
+```
+
+This will execute the previously described seed script in the running `medusa-server` Docker container.
 
 ## Try it out
 
@@ -104,13 +132,9 @@ After the seed script has run you will have the following things in you database
 - a User with the email: admin@medusa-test.com and password: supersecret
 - a Region called Default Region with the countries GB, DE, DK, SE, FR, ES, IT
 - a Shipping Option called Standard Shipping which costs 10 EUR
-- a Product called Medusa Shirt with 4 Product Variants that all cost 19.50 EUR
-- a Product called Medusa Waterbottle with 1 Product Variant that all costs 10.00 EUR
+- a Product called Cool Test Product with 4 Product Variants that all cost 19.50 EUR
 
-
-Visit [docs.medusa-commerce.com](https://docs.medusa-comerce.com) for further guides.
-
-## Thank you!
+Visit [docs.medusa-commerce.com](https://docs.medusa-commerce.com) for further guides.
 
 <p>
   <a href="https://www.medusa-commerce.com">
