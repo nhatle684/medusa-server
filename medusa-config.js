@@ -43,6 +43,10 @@ const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME || "";
 const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY || "";
 const CLOUDINARY_YOUR_API_SECRET = process.env.CLOUDINARY_YOUR_API_SECRET || "";
 
+// Misc
+const JWT_SECRET = process.env.JWT_SECRET || "";
+const COOKIE_SECRET = process.env.COOKIE_SECRET || "";
+
 // This is the place to include plugins. See API documentation for a thorough guide on plugins.
 const plugins = [
   `medusa-fulfillment-manual`,
@@ -77,6 +81,9 @@ module.exports = {
     // database_type: "sqlite",
     store_cors: STORE_CORS,
     admin_cors: ADMIN_CORS,
+    cookie_secret: COOKIE_SECRET,
+    JWT_SECRET: JWT_SECRET,
+
   },
   plugins,
 };
