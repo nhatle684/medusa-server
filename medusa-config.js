@@ -83,7 +83,6 @@ module.exports = {
     admin_cors: ADMIN_CORS,
     cookie_secret: COOKIE_SECRET,
     JWT_SECRET: JWT_SECRET,
-
   },
   plugins,
 };
