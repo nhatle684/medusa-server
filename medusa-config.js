@@ -38,7 +38,7 @@ const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 const STRIPE_API_KEY = process.env.STRIPE_API_KEY || "";
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || "";
 
-// Cloudinary
+// File storage
 const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME || "";
 const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY || "";
 const CLOUDINARY_YOUR_API_SECRET = process.env.CLOUDINARY_YOUR_API_SECRET || "";
@@ -61,14 +61,13 @@ const plugins = [
   //   },
   // },
   {
-    resolve: `medusa-file-cloudinary`,
+    resolve: "medusa-plugin-filestorage-local",
     options: {
-        cloud_name: CLOUDINARY_CLOUD_NAME,
-        api_key: CLOUDINARY_API_KEY,
-        api_secret: CLOUDINARY_YOUR_API_SECRET,
-        secure: true,
-    },
-  },
+      serverBaseUrl: process.env.MEDUSA_BACKEND_URL || "http://localhost:9000",
+      saveInDatabase: false, // recommended: false
+      fileLocation: "uploads/persistent/",
+    }
+  }
 ];
 
 module.exports = {
